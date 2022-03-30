@@ -63,7 +63,7 @@ public class ArduinoReader {
 							val = -99999;
 						}
 						if(val!=-99999) {
-							ArduinoReader.temperature = val;
+							ArduinoReader.temperature = val + 50;
 						}
 					}
 					ArduinoReader.buff = ArduinoReader.buff.substring(ArduinoReader.buff.lastIndexOf("Z"));

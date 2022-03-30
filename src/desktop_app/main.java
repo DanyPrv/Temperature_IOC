@@ -45,7 +45,7 @@ public class main {
 
 			float temperature=ArduinoReader.temperature;
 			temp.setText(String.valueOf(temperature)+" \u2103");
-
+			int notificationFlag = 0;
 			while(temperature != 9999) {
 				if(temperature == ArduinoReader.temperature && temperature != 0) {
 					continue;
@@ -57,13 +57,20 @@ public class main {
 					System.out.println("Too hot outside!");
 					status.setText("Too hot outside!");
 					status.setForeground (Color.red);
-					displayTray("Too hot outside!");
+					if(notificationFlag!=1) {
+						displayTray("Too hot outside!");
+					}
+					notificationFlag = 1;
 				}else if(temperature < -5) {
 					System.out.println("Too cold outside!");
 					status.setText("Too cold outside!");
 					status.setForeground (Color.blue);
-					displayTray("Too cold outside!");
+					if(notificationFlag!=-1) {
+						displayTray("Too cold outside!");
+					}
+					notificationFlag = -1;
 				} else {
+					notificationFlag = 0;
 					status.setText("");
 				}
 			}
