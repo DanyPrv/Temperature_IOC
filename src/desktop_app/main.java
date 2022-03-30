@@ -1,19 +1,22 @@
 package desktop_app;
 
-import java.util.Scanner;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
+import java.rmi.ConnectException;
 
 public class main {
 
-	public static void main(String[] args) throws AWTException {
+	public static void main(String[] args) throws AWTException, InterruptedException, ConnectException {
 		
 		if (SystemTray.isSupported()) {
+			//START ARDUINO
+			ArduinoReader reader = new ArduinoReader();
+			reader.start();
+			
 			JFrame frame = new JFrame("Temp app");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setSize(400, 300);
@@ -40,12 +43,14 @@ public class main {
 			frame.getContentPane().add(BorderLayout.SOUTH, panelStatus);
 			frame.setVisible(true);
 
-			int temperature=0;
+			float temperature=ArduinoReader.temperature;
 			temp.setText(String.valueOf(temperature)+" \u2103");
-			Scanner in = new Scanner(System.in);
 
 			while(temperature != 9999) {
-				temperature = in.nextInt();
+				if(temperature == ArduinoReader.temperature && temperature != 0) {
+					continue;
+				}
+				temperature = ArduinoReader.temperature;
 				temp.setText(String.valueOf(temperature)+" \u2103");
 
 				if(temperature > 30) {
@@ -62,8 +67,6 @@ public class main {
 					status.setText("");
 				}
 			}
-			
-			in.close();
 		} else {
 			System.err.println("System tray not supported!");
 		}
